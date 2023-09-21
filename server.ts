@@ -1,5 +1,5 @@
 import express from 'express'
-import router from './src/routes/index'
+import router from './src/routes/routes'
 import { db } from './src/config/db'
 
 const app = express()
@@ -23,7 +23,7 @@ app.listen(port, () => {
 
 
 try {
-    db.sync({ force: true , alter: true})
+    db.sync({ force: false , alter: true})
     db
         .authenticate()
         .then(() => {

@@ -23,6 +23,12 @@ export const auth = async (req, res, next) => {
             next();
         }
 
+        if(!token) {
+            res.status(401).send({
+                error : "Authorizaton required"
+            })
+        }
+
     }
     catch (error) {
         return res.status(401).send({ message: 'Invalid token' });
