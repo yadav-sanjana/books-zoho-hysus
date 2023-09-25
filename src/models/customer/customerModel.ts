@@ -28,11 +28,27 @@ export const CustomerModel = db.define('customer', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    skype_name : {
+        type : DataTypes.STRING,
+        allowNull : true
+    },
+    designation : {
+        type : DataTypes.STRING,
+        allowNull : true
+    },
+    department : {
+        type : DataTypes.STRING,
+        allowNull : true
+    },
     work_phone: {
         type: DataTypes.STRING,
         allowNull: false
     },
     mobile_phone: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    website: {
         type: DataTypes.STRING,
         allowNull: true
     },
@@ -47,4 +63,13 @@ export const CustomerModel = db.define('customer', {
 
 }, {
     timestamps: true
+})
+
+export const CustomerOtherModel = db.define('customer_detail', {
+    id : {
+        type : DataTypes.INTEGER,
+        autoIncrement : true,
+        primaryKey : true
+    },
+    
 })

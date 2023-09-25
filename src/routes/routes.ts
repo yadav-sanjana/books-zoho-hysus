@@ -13,6 +13,7 @@ router.post('/user', auth, UserController.createUser)
 
 //customer
 router.get('/customer', CustomerController.getAllCustomer)
+router.post('/customer', CustomerController.createCustomer)
 
 //salesperson
 router.get('/sales-person', SalePersonController.getSalesPerson)
