@@ -8,11 +8,21 @@ export const CustomerController = {
     },
 
     async createCustomer(req, res) {
-        const { email } = req.body
+        const { 
+            customerType,
+            contactPerson,
+            company,
+            username,
+            customer_email,
+            skype_name,
+            designation,
+            work_phone,
+            mobile_phone,
+            website } = req.body
         const sqlUID = req.sqlUID
 
         try {
-            const exist = await CustomerModel.findOne({ where: { email } })
+            const exist = await CustomerModel.findOne({ where: { customer_email } })
 
             if (exist) {
                 res.status(400).send({
@@ -22,14 +32,23 @@ export const CustomerController = {
             }
 
             const customer = await CustomerModel.create({
-                email,
+                customerType,
+                contactPerson,
+                company,
+                username,
+                customer_email,
+                skype_name,
+                designation,
+                work_phone,
+                mobile_phone,
+                website,
                 created_by: sqlUID
             })
-            
+
             res.send(customer)
         } catch (error) {
             res.status(500).send({
-                error: "Internal Server Error"
+                error: error.message
             })
         }
     }
