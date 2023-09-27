@@ -17,7 +17,7 @@ export const db = new Sequelize("mysql://hysus-admin:8jcfbtt_rh)x@68.178.145.199
   dialect: 'mysql',
   dialectModule: require('mysql2'),
   dialectOptions: {
-    connectTimeout: 30000, // Adjust the timeout value as needed
+    connectTimeout: 60000, // Adjust the timeout value as needed
   },
   logging: true
 });
