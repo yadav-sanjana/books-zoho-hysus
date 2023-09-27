@@ -12,7 +12,7 @@ const developmentDbUrl = process.env.DEVELOPMENT_DB_URL;
 //checking modes
 const dbUrl = isProduction ? productionDbUrl : developmentDbUrl;
 
-export const db = new Sequelize(dbUrl, {
+export const db = new Sequelize("mysql://hysus-admin:8jcfbtt_rh)x@68.178.145.199:3306/zoho-dev", {
   host: dbHost,
   dialect: 'mysql',
   dialectModule: require('mysql2'),
