@@ -20,7 +20,11 @@ export const CustomerModel = db.define('customer', {
         type: DataTypes.STRING,
         allowNull: true
     },
-    username: {
+    firstname: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    lastname: {
         type: DataTypes.STRING,
         allowNull: false
     },
