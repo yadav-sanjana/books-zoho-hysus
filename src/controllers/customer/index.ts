@@ -1,4 +1,4 @@
-import { CustomerModel } from "../../models/customer/customerModel"
+import { CartModel, CustomerModel } from "../../models/customer/customerModel"
 
 export const CustomerController = {
     async getAllCustomer(req, res) {
@@ -8,7 +8,7 @@ export const CustomerController = {
     },
 
     async createCustomer(req, res) {
-        const { 
+        const {
             customerType,
             contactPerson,
             company,
@@ -22,7 +22,11 @@ export const CustomerController = {
         const sqlUID = req.sqlUID
 
         try {
-            const exist = await CustomerModel.findOne({ where: { customer_email } })
+            const exist = await CustomerModel.findOne({
+                where: {
+                    customer_email: customer_email
+                }
+            })
 
             if (exist) {
                 res.status(400).send({
@@ -44,6 +48,10 @@ export const CustomerController = {
                 mobile_phone,
                 website,
                 created_by: sqlUID
+            })
+
+            await CartModel.create({
+                customer_id: customer?.dataValues?.id
             })
 
             res.send(customer)

@@ -42,6 +42,18 @@ export const InvoiceModel = db.define('invoice', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    discount: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    tax: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    amount: {
+        type: DataTypes.FLOAT,
+        allowNull: true
+    },
     customer_notes: {
         type: DataTypes.STRING,
         allowNull: true

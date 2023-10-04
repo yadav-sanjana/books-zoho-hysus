@@ -1,0 +1,14 @@
+{
+    "type": "service_account",
+    "project_id": "hysus-invoice",
+    "private_key_id": "6e707ac19aa5242262a22a3093acc62a671cefc6",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC4bB3FATyy/Z67\nTgxhYNUMIfGoyGfqTzxg5nXAlrGS9u3xo6tJ0FU39mAOBWDIJEBO26cqwUuDQ/ES\nkyO7h4Zxhk2kH+S5H/koHbWdzeZMn4MCft2NtVbDtIHiexS1boNiZHKNR1MLgBHh\nArPoYV4R/nSyChJ/esmxLLxIMEspPsDd8WK2y2eOF3LuZzV1tRy4UHbdY1Sr82JX\n3yUx7WPbPq1Bt36ZXnI1NV0XNmd9eVNpMpVU99xvDrb6HkqE+7uaP5o+MdFVpJ92\nIEbIElS7loR4xH4ePHr+Pa6KpWxJQTUHP8C/huENIKlB8W4yJIt4oxp/OcrVs0VG\nvvBNaua7AgMBAAECggEAL/DnEjnemhcFBuLkpAHEkElYpUwne0kKxJPUQ3LJCY/I\nThsCYYdXR9tzn+F1BcIqt3UxMRObei2UwwPd85do8yT7FPG3hwpRPkTu2+1U81E6\nANGS7Y4Y1nobk5D0Uq++VrsO7jv+0gwCWdBWjU+WYS4ZDtlAcsQsHzMmZMutFjTJ\nFeu7FhycgbW5Bn1I0njHxzV0I40O7Q+eT+I24COraNch5aFOK24ZrDP+E8Pqt77i\nteminVKtKg2xoDi86aK0FoTGwxw0fzR0ODmNaQS5CHPyWntKZ26cmB8xxLfDN0di\ndIyppgUkj1eBsxgnhKfpMlb9Dme0PcJjsmY4NVpM6QKBgQDsdGYgzy8uHE+RArFI\na6K4sBjVz/1avnd6YWKyi97d6I7tWTLdBH9C/OqscRyHIagEpfilEo7qFX/6Wqru\ndxspGtHa+gvA7iD6ap8QTmYU+7hLGqmjjKklzeRMlskmT0SSBBWASPRAh6FLCcL5\n6mbJ2qrNXWLy0j2qrFUmLYYwQwKBgQDHqqoRvUzMut/BlJT9lGmOWsUNyr69D5BG\nybTiOweFJsSYbfdHgj/2Iw6G6J+uQAoZ6OKcer16kdWL+cMmCwsA//AZK/yJXKxe\nKXavRdJbCPrnurgMYNvyvxEslF2+QYjJNfusi+YJzDvrs1V2I40DKqsYrRJJY7Pa\nI36KI/FkKQKBgF92gwD+BKNOJMV7281MP27nEa/JABWRzjTnemxxUfIvgPzMRV+8\nABEwgSJLrGPWL7pos6EZg/933KpbzqTmC14mCNGqn/Itcb0ILN3teQNBuV8BDboN\nAQFVRbWyLtW7rQhyg6e+THZ9C556+2/gtc0K7mhpKpi0TtdIKjx2prV3AoGAb47q\ncPjslSMAa/9hc4FdrN0IZplWEvpEKVj/yLski3/KrkQauoiKxjJ2JmiI92nueuWE\n39swTPB4eTn2kCXxYwCdHONXuUPfRskx9+IyEw0kax8HQFtJ6QpaRScsbWXeUFXq\nJVERGX5UKHBNmrFoU1GewS3KHtknHwVf6T0F3WkCgYAnRlf1aUHi4adIGu+a2ymF\nhinZKwZcG7JwKZ1kYEcs6JSOklpTrtIZaTcNPE22/sCxRwf5xzwvAZpTXnk4xh4h\nFQlNdR72GzLIVBJ3XrnwSZxr3U3RhH6TNfTnMYu98I55hVkYcn3YW0l5bsqYii49\nW/w6/7//s7uzhU8KNtnoYQ==\n-----END PRIVATE KEY-----\n",
+    "client_email": "hysus-invoice@hysus-invoice.iam.gserviceaccount.com",
+    "client_id": "103241953033848094613",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/hysus-invoice%40hysus-invoice.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+  }
+  

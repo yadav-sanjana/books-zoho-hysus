@@ -1,5 +1,7 @@
+import { GetSignedUrlConfig } from "@google-cloud/storage"
+import { bucket } from "../../config/fileStorage"
 import { extendDateByDays } from "../../middlewares/dateExtend"
-import { CustomerModel } from "../../models/customer/customerModel"
+import { CartDetailModel, CartModel, CustomerModel } from "../../models/customer/customerModel"
 import { InvoiceModel, ItemModel, TermModel } from "../../models/invoice/invoiceModel"
 import { SalesPersonModel } from "../../models/salesperson/salesPersonModel"
 
@@ -74,36 +76,94 @@ export const InvoiceController = {
             details: items
         })
     },
-
     async createInvoice(req, res) {
-
-        const sqlUID = req.sqlUID
-        const { customer,
+        const sqlUID = req.sqlUID;
+        const {
+            customer,
             invoice_no,
             order_no,
             sales_person,
             subject,
             customer_notes,
             ATC,
-            file,
-            terms
-        } = req.body
-        // const file = req.file
-        const invoice_date: Date = new Date(req.body.invoice_date)
+            terms,
+            discount,
+            tax,
+        } = req.body;
+
+        const cart = await CartModel.findOne({
+            where: {
+                customer_id: customer
+            }
+        })
+
+        const cart_detail = await CartDetailModel.findAll({
+            where: {
+                cart_id: cart?.dataValues?.id
+            }
+        })
+
+        const valuesAmount = cart_detail.map((amt) => {
+            return amt.dataValues.amount
+        })
+
+        const amount = valuesAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+        const termId = Number(terms);
+        const invoice_date: Date = new Date(req.body.invoice_date);
+        if (!req.file) {
+            return res.status(400).send('No file uploaded.');
+        }
+        if (req.file) {
+            const filename = Date.now() + '_' + req.file.originalname;
+            const file = bucket.file(filename);
+
+            try {
+                const fileStream = file.createWriteStream({
+                    metadata: {
+                        contentType: req.file.mimetype,
+                    },
+                });
+
+                fileStream.on('error', (err) => {
+                    console.error(err);
+                    res.status(500).send('Error uploading file: ' + err.message);
+                });
+
+                fileStream.on('finish', async () => {
+                    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`;
+                    console.log('File uploaded. URL:', publicUrl);
+
+                    // Here, you can save the publicUrl to your database
+                    // For example, using a database model like Mongoose or Sequelize
+
+                    // Respond with the public URL
+                    res.status(200).json({ url: publicUrl });
+                });
+
+                // fileStream.end(req.file.buffer);
+            } catch (err) {
+                console.log(err.message);
+                return
+            }
+
+        }
         try {
             const termExists = await TermModel.findOne({
                 where: {
-                    id: terms
-                }
-            })
+                    id: termId,
+                },
+            });
+
             if (!termExists) {
                 res.status(400).send({
-                    message: "please select valid term"
-                })
-                return
+                    message: "Please select a valid term",
+                });
+                return;
             }
-            const termsDay = termExists?.dataValues?.days
-            const due_date = extendDateByDays(invoice_date, termsDay)
+
+            const termsDay = termExists?.dataValues?.days;
+            const due_date = extendDateByDays(invoice_date, termsDay);
 
             const invoice = await InvoiceModel.create({
                 customer,
@@ -114,20 +174,26 @@ export const InvoiceController = {
                 subject,
                 customer_notes,
                 ATC,
-                file,
+                file: "publicUrl", // Use the public URL here
                 terms,
                 due_date,
-                created_by: sqlUID
-            })
+                discount,
+                tax,
+                amount,
+                created_by: sqlUID,
+            });
 
-            res.send(invoice)
+            res.status(200).send(invoice);
+
+
+
         } catch (error) {
             res.status(500).send({
-                error: error.message
-            })
+                error: error.message,
+            });
         }
-
     }
+
 }
 
 export const TermController = {
@@ -163,17 +229,75 @@ export const ItemController = {
                 amount,
             } = req.body
 
-            const items = await ItemModel.create({
+            const customer_id = req.params.id
+
+            const cart_exists = await CartModel.findOne({
+                where: {
+                    customer_id
+                }
+            })
+            const items = await CartDetailModel.create({
                 item,
                 quantity,
                 rate,
                 amount,
-                invoice_no: req.params.id
+                cart_id: cart_exists?.dataValues?.id
             })
             res.send(items)
         } catch (error) {
             res.status(500).send({
                 error: error.message
+            })
+        }
+    },
+
+    async updateCartItem(req, res) {
+        try {
+
+            const id = req.params.id
+
+            const { item, quantity, rate, amount } = req.body
+            const updatedItem = await CartDetailModel.update({
+                item,
+                quantity,
+                rate,
+                amount
+            }, {
+                where: {
+                    id
+                }
+            })
+
+            res.send({
+                message: "Updated successfully"
+            })
+
+        } catch (error) {
+            res.status(500).send({
+                error: error.message
+            })
+        }
+    },
+    async fetchItems(req, res) {
+        try {
+            const customer_id = req.params.id
+
+            const cart = await CartModel.findOne({
+                where: {
+                    customer_id
+                }
+            })
+
+            const itemList = await CartDetailModel.findAll({
+                where: {
+                    cart_id: cart?.dataValues?.id
+                }
+            })
+
+            res.send(itemList)
+        } catch (err) {
+            res.status(500).send({
+                error: err.message
             })
         }
     }

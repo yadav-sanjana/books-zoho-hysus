@@ -65,11 +65,49 @@ export const CustomerModel = db.define('customer', {
     timestamps: true
 })
 
-export const CustomerOtherModel = db.define('customer_detail', {
+export const CartModel = db.define('customer_cart', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-
+    customer_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+}, {
+    timestamps: true
 })
+
+export const CartDetailModel = db.define("cart_detail", {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    cart_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    item: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1
+    },
+    rate: {
+        type: DataTypes.FLOAT,
+        allowNull: true
+    },
+    amount: {
+        type: DataTypes.FLOAT,
+        allowNull: true
+    }
+}, {
+    timestamps: true
+})
+
+CartModel.hasOne(CustomerModel, { sourceKey: "customer_id", foreignKey: "id" })

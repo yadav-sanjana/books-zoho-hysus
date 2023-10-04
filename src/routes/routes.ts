@@ -4,6 +4,7 @@ import { CustomerController } from '../controllers/customer'
 import { auth } from '../middlewares/auth'
 import { SalePersonController } from '../controllers/salesperson'
 import { InvoiceController, ItemController, TermController } from '../controllers/invoice'
+import { singleUpload } from '../config/fileStorage'
 
 const router = express.Router()
 
@@ -27,8 +28,10 @@ router.post('/terms', auth, TermController.createTerm)
 //invoice
 router.get('/invoice', InvoiceController.getAllInvoiceList)
 router.get('/invoice/:id', InvoiceController.getInvoiceById)
-router.post('/invoice', auth, InvoiceController.createInvoice)
+router.post('/invoice', auth, singleUpload, InvoiceController.createInvoice)
 
 router.post('/add-item/:id', ItemController.addItem)
+router.patch('/add-item/:id', ItemController.updateCartItem)
+router.get('/item/:id' , ItemController.fetchItems)
 
 export default router
