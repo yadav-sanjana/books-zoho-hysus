@@ -75,6 +75,22 @@ export const CartModel = db.define('customer_cart', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    discount: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    tax: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    total_amount: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
+    payableAmount: {
+        type: DataTypes.FLOAT,
+        allowNull: true
+    }
 }, {
     timestamps: true
 })
@@ -111,3 +127,4 @@ export const CartDetailModel = db.define("cart_detail", {
 })
 
 CartModel.hasOne(CustomerModel, { sourceKey: "customer_id", foreignKey: "id" })
+CartModel.hasMany(CartDetailModel, {sourceKey : "id", foreignKey:"cart_id", as:"cart_details"})

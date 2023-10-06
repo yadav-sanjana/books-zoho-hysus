@@ -30,8 +30,13 @@ router.get('/invoice', InvoiceController.getAllInvoiceList)
 router.get('/invoice/:id', InvoiceController.getInvoiceById)
 router.post('/invoice', auth, singleUpload, InvoiceController.createInvoice)
 
+//item in cart
 router.post('/add-item/:id', ItemController.addItem)
 router.patch('/add-item/:id', ItemController.updateCartItem)
 router.get('/item/:id' , ItemController.fetchItems)
+router.get('/cart-item/:item_id', ItemController.fetchSingleItem)
+
+//cart
+router.patch('/cart/:id', ItemController.updateCart)
 
 export default router

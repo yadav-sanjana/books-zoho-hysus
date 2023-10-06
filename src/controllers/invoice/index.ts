@@ -87,8 +87,6 @@ export const InvoiceController = {
             customer_notes,
             ATC,
             terms,
-            discount,
-            tax,
         } = req.body;
 
         const cart = await CartModel.findOne({
@@ -177,9 +175,6 @@ export const InvoiceController = {
                 file: "publicUrl", // Use the public URL here
                 terms,
                 due_date,
-                discount,
-                tax,
-                amount,
                 created_by: sqlUID,
             });
 
@@ -236,14 +231,37 @@ export const ItemController = {
                     customer_id
                 }
             })
-            const items = await CartDetailModel.create({
+            const itemAdd = await CartDetailModel.create({
                 item,
                 quantity,
                 rate,
                 amount,
                 cart_id: cart_exists?.dataValues?.id
             })
-            res.send(items)
+
+            if (cart_exists) {
+                const cart_detail = await CartDetailModel.findAll({
+                    where: {
+                        cart_id: cart_exists?.dataValues?.id
+                    }
+                })
+
+                const valuesAmount = cart_detail.map((amt) => {
+                    return amt.dataValues.amount
+                })
+
+                const totalAmount = valuesAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+                await CartModel.update({
+                    total_amount: totalAmount
+                }, {
+                    where: {
+                        id: cart_exists?.dataValues?.id
+                    }
+                })
+            }
+
+            res.send(itemAdd)
         } catch (error) {
             res.status(500).send({
                 error: error.message
@@ -255,6 +273,16 @@ export const ItemController = {
         try {
 
             const id = req.params.id
+            const exists = await CartDetailModel.findOne({
+                where: {
+                    id
+                }
+            })
+            if (!exists) {
+                res.status(404).send({
+                    message: "No such item found"
+                })
+            }
 
             const { item, quantity, rate, amount } = req.body
             const updatedItem = await CartDetailModel.update({
@@ -267,6 +295,28 @@ export const ItemController = {
                     id
                 }
             })
+
+            const cart_detail = await CartDetailModel.findAll({
+                where: {
+                    cart_id: exists?.dataValues?.cart_id
+                }
+            })
+
+
+            const valuesAmount = cart_detail.map((amt) => {
+                return amt.dataValues.amount
+            })
+
+            const totalAmount = valuesAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+            await CartModel.update({
+                total_amount: totalAmount
+            }, {
+                where: {
+                    id: exists?.dataValues?.cart_id
+                }
+            })
+
 
             res.send({
                 message: "Updated successfully"
@@ -288,10 +338,18 @@ export const ItemController = {
                 }
             })
 
-            const itemList = await CartDetailModel.findAll({
+            const itemList = await CartModel.findAll({
                 where: {
-                    cart_id: cart?.dataValues?.id
-                }
+                    customer_id
+                },
+                attributes: ["id", "customer_id", "discount", "tax", "total_amount", "payableAmount"],
+                include: [
+                    {
+                        model: CartDetailModel,
+                        required: false,
+                        as: "cart_details",
+                    }
+                ]
             })
 
             res.send(itemList)
@@ -300,5 +358,53 @@ export const ItemController = {
                 error: err.message
             })
         }
+    },
+    async fetchSingleItem(req, res) {
+        try {
+
+            const id = req.params.item_id
+            const item = await CartDetailModel.findOne({
+                where: {
+                    id
+                }
+            })
+
+            res.send(item)
+        } catch (error) {
+            res.status(500).send({
+                error: error.message
+            })
+        }
+    },
+
+    async updateCart(req, res) {
+        try {
+            const {
+                discount,
+                tax,
+                total_amount,
+                payableAmount
+            } = req.body
+
+            const customer_id = req.params.id
+
+            const updateCart = await CartModel.update({
+                discount,
+                tax,
+                total_amount,
+                payableAmount
+            }, {
+                where: {
+                    customer_id
+                }
+            })
+
+            res.send(updateCart)
+        } catch (error) {
+            res.status(500).send({
+                error: error.message
+            })
+        }
+
     }
 }
