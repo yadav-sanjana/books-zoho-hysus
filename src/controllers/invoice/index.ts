@@ -41,12 +41,12 @@ export const InvoiceController = {
             include: [
                 {
                     model: CustomerModel,
-                    required: true,
+                    required: false,
                     as: "as_customer"
                 },
                 {
                     model: SalesPersonModel,
-                    required: true,
+                    required: false,
                     as: "as_sales_person",
                     attributes: ["id", "email", "name"]
                 },

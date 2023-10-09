@@ -16,6 +16,7 @@ router.post('/user', auth, UserController.createUser)
 //customer
 router.get('/customer', CustomerController.getAllCustomer)
 router.post('/customer', CustomerController.createCustomer)
+router.get('/customer/:id', CustomerController.getSingleCustomer)
 
 //salesperson
 router.get('/sales-person', SalePersonController.getSalesPerson)
@@ -30,10 +31,10 @@ router.get('/invoice', InvoiceController.getAllInvoiceList)
 router.get('/invoice/:id', InvoiceController.getInvoiceById)
 router.post('/invoice', auth, singleUpload, InvoiceController.createInvoice)
 
-//item in cart
+//item in cart 
 router.post('/add-item/:id', ItemController.addItem)
 router.patch('/add-item/:id', ItemController.updateCartItem)
-router.get('/item/:id' , ItemController.fetchItems)
+router.get('/item/:id', ItemController.fetchItems)
 router.get('/cart-item/:item_id', ItemController.fetchSingleItem)
 
 //cart

@@ -48,6 +48,14 @@ export const CustomerModel = db.define('customer', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    razorpay_id: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    stripe_id: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     website: {
         type: DataTypes.STRING,
         allowNull: true
@@ -77,15 +85,15 @@ export const CartModel = db.define('customer_cart', {
     },
     discount: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     tax: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     total_amount: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: true
     },
     payableAmount: {
         type: DataTypes.FLOAT,
@@ -127,4 +135,4 @@ export const CartDetailModel = db.define("cart_detail", {
 })
 
 CartModel.hasOne(CustomerModel, { sourceKey: "customer_id", foreignKey: "id" })
-CartModel.hasMany(CartDetailModel, {sourceKey : "id", foreignKey:"cart_id", as:"cart_details"})
+CartModel.hasMany(CartDetailModel, { sourceKey: "id", foreignKey: "cart_id", as: "cart_details" })

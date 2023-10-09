@@ -1,10 +1,32 @@
+import { stripe } from "../../config/stripe"
 import { CartModel, CustomerModel } from "../../models/customer/customerModel"
+import razorpayConfig from '../../config/razorpay';
+import axios from 'axios';
 
 export const CustomerController = {
     async getAllCustomer(req, res) {
         const customerList = await CustomerModel.findAll({})
 
         res.send(customerList)
+    },
+
+    async getSingleCustomer(req, res) {
+        const id = req.params.id
+
+        const customer = await CustomerModel.findOne({
+            where: {
+                id
+            }
+        })
+
+        if (!customer) {
+            res.status(404).send({
+                message: "Not found"
+            })
+            return
+        }
+
+        res.send(customer)
     },
 
     async createCustomer(req, res) {
@@ -35,9 +57,29 @@ export const CustomerController = {
                 return
             }
 
+            const stripeCustomer = await stripe.customers.create({
+                name: firstname,
+                email: customer_email
+            });
+
+            const razorpay = axios.create({
+                baseURL: 'https://api.razorpay.com/v1',
+                auth: {
+                    username: razorpayConfig.apiKey,
+                    password: razorpayConfig.apiSecret,
+                },
+            });
+
+            const razorpayResponse = await razorpay.post('/customers', {
+                name: firstname,
+                email: customer_email
+            });
+
             const customer = await CustomerModel.create({
                 customerType,
                 contactPerson,
+                razorpay_id: razorpayResponse?.data.id,
+                stripe_id: stripeCustomer?.id,
                 company,
                 firstname,
                 lastname,
