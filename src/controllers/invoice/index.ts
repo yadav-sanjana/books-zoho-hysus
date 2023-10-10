@@ -55,6 +55,19 @@ export const InvoiceController = {
                     required: false,
                     as: "as_terms",
                     attributes: ["id", "term", "days"]
+                },
+                {
+                    model: CartModel,
+                    required: false,
+                    as: "invoice_cart",
+                    attributes: ["id", "customer_id"],
+                    include: [
+                        {
+                            model: CartDetailModel,
+                            required: false,
+                            as: "cart_details"
+                        }
+                    ]
                 }
             ]
         })

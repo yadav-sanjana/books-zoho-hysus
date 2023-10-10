@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { db } from "../../config/db";
-import { CustomerModel } from "../customer/customerModel";
+import { CartModel, CustomerModel } from "../customer/customerModel";
 import { SalesPersonModel } from "../salesperson/salesPersonModel";
 
 export const InvoiceModel = db.define('invoice', {
@@ -51,6 +51,10 @@ export const InvoiceModel = db.define('invoice', {
         allowNull: true
     },
     amount: {
+        type: DataTypes.FLOAT,
+        allowNull: true
+    },
+    balance: {
         type: DataTypes.FLOAT,
         allowNull: true
     },
@@ -149,3 +153,4 @@ InvoiceModel.hasOne(CustomerModel, { sourceKey: 'customer', foreignKey: 'id', as
 InvoiceModel.hasOne(SalesPersonModel, { sourceKey: 'sales_person', foreignKey: 'id', as: "as_sales_person" })
 InvoiceModel.hasOne(TermModel, { sourceKey: 'terms', foreignKey: 'id', as: "as_terms" })
 ItemModel.hasMany(InvoiceModel, { sourceKey: 'invoice_no', foreignKey: 'id', as: "as_items" })
+InvoiceModel.hasOne(CartModel, {sourceKey: 'customer', foreignKey:'customer_id'})
