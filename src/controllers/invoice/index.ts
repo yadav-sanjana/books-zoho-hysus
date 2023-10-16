@@ -25,6 +25,18 @@ export const InvoiceController = {
                     required: false,
                     as: "as_terms",
                     attributes: ["id", "term", "days"]
+                }, {
+                    model: CartModel,
+                    required: false,
+                    as: "invoice_cart",
+                    attributes: ["id", "customer_id"],
+                    include: [
+                        {
+                            model: CartDetailModel,
+                            required: false,
+                            as: "cart_details"
+                        }
+                    ]
                 }
             ]
         })
@@ -187,6 +199,7 @@ export const InvoiceController = {
                 ATC,
                 file: "publicUrl", // Use the public URL here
                 terms,
+                cart_id : cart?.dataValues?.id,
                 due_date,
                 created_by: sqlUID,
             });
