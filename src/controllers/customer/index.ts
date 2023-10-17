@@ -102,5 +102,40 @@ export const CustomerController = {
                 error: error.message
             })
         }
+    },
+
+    async updateCustomer(req, res) {
+        const id = req.params.id
+
+        try {
+            const exists = await CustomerModel.findOne({
+                where: {
+                    id
+                }
+            })
+
+            if (!exists) {
+                return res.status(404).send({
+                    message: "No Customer Found"
+                })
+            }
+
+            const update_customer = await CustomerModel.update({
+                ...req.body
+
+            }, {
+                where: {
+                    id
+                }
+            })
+
+            res.send({
+                message: "Updated Successfully"
+            })
+        } catch (error) {
+            res.status(500).send({
+                error: error.message
+            })
+        }
     }
 }

@@ -17,6 +17,7 @@ router.post('/user', auth, UserController.createUser)
 router.get('/customer', CustomerController.getAllCustomer)
 router.post('/customer', CustomerController.createCustomer)
 router.get('/customer/:id', CustomerController.getSingleCustomer)
+router.patch('/customer/:id', CustomerController.updateCustomer)
 
 //salesperson
 router.get('/sales-person', SalePersonController.getSalesPerson)
