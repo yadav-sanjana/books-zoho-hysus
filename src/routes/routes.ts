@@ -5,6 +5,7 @@ import { auth } from '../middlewares/auth'
 import { SalePersonController } from '../controllers/salesperson'
 import { InvoiceController, ItemController, TermController } from '../controllers/invoice'
 import { singleUpload } from '../config/fileStorage'
+import { RoleController } from '../controllers/role'
 
 const router = express.Router()
 
@@ -12,6 +13,7 @@ const router = express.Router()
 router.get('/user', UserController.getUser)
 router.get('/user/:email', UserController.getUserToken)
 router.post('/user', auth, UserController.createUser)
+router.post('/company', UserController.addCompanyDetail)
 
 //customer
 router.get('/customer', CustomerController.getAllCustomer)
@@ -37,6 +39,11 @@ router.post('/add-item/:id', ItemController.addItem)
 router.patch('/add-item/:id', ItemController.updateCartItem)
 router.get('/item/:id', ItemController.fetchItems)
 router.get('/cart-item/:item_id', ItemController.fetchSingleItem)
+
+//roles
+router.post('/role', RoleController.createRole)
+router.get('/role', RoleController.fetchRoles)
+router.get('/role/:id', RoleController.roleById)
 
 //cart
 router.patch('/cart/:id', ItemController.updateCart)

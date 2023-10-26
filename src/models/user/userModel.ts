@@ -1,5 +1,7 @@
 import { DataTypes } from "sequelize";
 import { db } from "../../config/db";
+import { CompanyModel } from "./companyDetailModel";
+import { RoleModel } from "../role/RoleModel";
 
 export const UserModel = db.define('user', {
     id: {
@@ -8,12 +10,16 @@ export const UserModel = db.define('user', {
         primaryKey: true
     },
     role: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    company_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
     created_by: {
         type: DataTypes.INTEGER,
@@ -26,3 +32,6 @@ export const UserModel = db.define('user', {
 }, {
     timestamps: true
 })
+
+UserModel.hasOne(CompanyModel, { sourceKey: "company_id", foreignKey: "id", as: "as_company_detail" })
+UserModel.hasOne(RoleModel, { sourceKey: 'role', foreignKey: 'id', as: "as_role" })

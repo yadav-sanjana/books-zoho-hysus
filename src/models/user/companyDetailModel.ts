@@ -1,30 +1,30 @@
 import { DataTypes } from "sequelize";
 import { db } from "../../config/db";
-import { RoleModel } from "../role/RoleModel";
 
-export const SalesPersonModel = db.define('sale_person', {
+export const CompanyModel = db.define('company_detail', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
+        allowNull: false,
         primaryKey: true
     },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    emp_id: {
+    company_name: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    email: {
+    company_address: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    contact_number: {
+    company_city: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    role: {
+    company_country: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    company_zip: {
         type: DataTypes.INTEGER,
         allowNull: true
     },
@@ -36,6 +36,7 @@ export const SalesPersonModel = db.define('sale_person', {
         type: DataTypes.INTEGER,
         allowNull: true
     }
+}, {
+    timestamps: true
 })
 
-SalesPersonModel.hasOne(RoleModel, { sourceKey: 'role', foreignKey: 'id', as: "as_role" })

@@ -1,4 +1,5 @@
 import generateJwtToken from "../../middlewares/auth"
+import { CompanyModel } from "../../models/user/companyDetailModel"
 import { UserModel } from "../../models/user/userModel"
 
 export const UserController = {
@@ -6,6 +7,24 @@ export const UserController = {
         const user = await UserModel.findAll({})
 
         res.send(user)
+    },
+    async addCompanyDetail(req, res) {
+        const { company_name,
+            company_address,
+            company_city,
+            company_country,
+            company_zip
+        } = req.body
+
+        const company = await CompanyModel.create({
+            company_name,
+            company_address,
+            company_city,
+            company_country,
+            company_zip
+        })
+
+        res.send(company)
     },
 
     async getUserToken(req, res) {
@@ -25,13 +44,13 @@ export const UserController = {
         const token = generateJwtToken(exist?.get("id"), exist?.get("email"))
 
         res.send({
-            user : exist,
-            token : token
+            user: exist,
+            token: token
         })
     },
 
     async createUser(req, res) {
-        const { role, email } = req.body
+        const { role, email, company_id } = req.body
         const sqlUID = req.sqlUID
 
         const exists = await UserModel.findOne({
@@ -47,6 +66,7 @@ export const UserController = {
         const user = await UserModel.create({
             role,
             email,
+            company_id,
             created_by: sqlUID
         })
 
