@@ -2,7 +2,7 @@ import { RoleModel } from "../../models/role/RoleModel"
 
 export const RoleController = {
     async createRole(req, res) {
-        const { role } = res.body
+        const { role } = req.body
 
         const exists = await RoleModel.findOne({
             where: {

@@ -28,6 +28,10 @@ export const CompanyModel = db.define('company_detail', {
         type: DataTypes.INTEGER,
         allowNull: true
     },
+    company_logo: {
+        type: DataTypes.TEXT('long'),
+        allowNull: true
+    },
     created_by: {
         type: DataTypes.INTEGER,
         allowNull: true

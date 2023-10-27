@@ -13,7 +13,8 @@ const router = express.Router()
 router.get('/user', UserController.getUser)
 router.get('/user/:email', UserController.getUserToken)
 router.post('/user', auth, UserController.createUser)
-router.post('/company', UserController.addCompanyDetail)
+router.post('/company', auth, UserController.addCompanyDetail)
+router.get('/user-info', auth, UserController.getUserByToken)
 
 //customer
 router.get('/customer', CustomerController.getAllCustomer)

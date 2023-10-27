@@ -13,7 +13,7 @@ export const RoleModel = db.define('role', {
     },
     created_by: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     updated_by: {
         type: DataTypes.INTEGER,

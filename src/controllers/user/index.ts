@@ -24,21 +24,63 @@ export const UserController = {
 
         res.send(user)
     },
+    async getUserByToken(req, res) {
+        const id = req.sqlUID
+        const user = await UserModel.findOne({
+            where : {
+                id
+            },
+            include: [
+                {
+                    model: CompanyModel,
+                    required: false,
+                    as: "as_company_detail",
+                    attributes: ["id","company_logo", "company_name", "company_address", "company_city", "company_country", "company_zip"]
+                },
+                {
+                    model: RoleModel,
+                    required: false,
+                    as: "as_role",
+                    attributes: ["id", "role"]
+                }
+            ]
+        })
+        if (!user) {
+            res.status(404).send({
+                message: "User not found"
+            })
+            return
+        }
+
+        res.send(user)
+    },
 
     async addCompanyDetail(req, res) {
         const { company_name,
             company_address,
             company_city,
             company_country,
-            company_zip
+            company_zip,
+            company_logo
         } = req.body
+
 
         const company = await CompanyModel.create({
             company_name,
             company_address,
             company_city,
             company_country,
-            company_zip
+            company_zip,
+            company_logo,
+            created_by : req.sqlUID
+        })
+
+        await UserModel.update({
+            company_id : company?.get("id")
+        },{
+            where : {
+                id : req.sqlUID
+            }
         })
 
         res.send(company)
