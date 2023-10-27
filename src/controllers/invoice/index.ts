@@ -1,4 +1,3 @@
-import { GetSignedUrlConfig } from "@google-cloud/storage"
 import { bucket } from "../../config/fileStorage"
 import { extendDateByDays } from "../../middlewares/dateExtend"
 import { CartDetailModel, CartModel, CustomerModel } from "../../models/customer/customerModel"

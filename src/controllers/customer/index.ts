@@ -1,6 +1,6 @@
 import { stripe } from "../../config/stripe"
 import { CartModel, CustomerModel } from "../../models/customer/customerModel"
-import razorpayConfig from '../../config/razorpay';
+// import razorpayConfig from '../../config/razorpay';
 import axios from 'axios';
 
 export const CustomerController = {
@@ -62,23 +62,23 @@ export const CustomerController = {
                 email: customer_email
             });
 
-            const razorpay = axios.create({
-                baseURL: 'https://api.razorpay.com/v1',
-                auth: {
-                    username: razorpayConfig.apiKey,
-                    password: razorpayConfig.apiSecret,
-                },
-            });
+            // const razorpay = axios.create({
+            //     baseURL: 'https://api.razorpay.com/v1',
+            //     auth: {
+            //         username: razorpayConfig.apiKey,
+            //         password: razorpayConfig.apiSecret,
+            //     },
+            // });
 
-            const razorpayResponse = await razorpay.post('/customers', {
-                name: firstname,
-                email: customer_email
-            });
+            // const razorpayResponse = await razorpay.post('/customers', {
+            //     name: firstname,
+            //     email: customer_email
+            // });
 
             const customer = await CustomerModel.create({
                 customerType,
                 contactPerson,
-                razorpay_id: razorpayResponse?.data.id,
+                // razorpay_id: razorpayResponse?.data.id,
                 stripe_id: stripeCustomer?.id,
                 company,
                 firstname,

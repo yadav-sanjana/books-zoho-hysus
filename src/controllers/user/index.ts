@@ -1,13 +1,28 @@
 import generateJwtToken from "../../middlewares/auth"
+import { RoleModel } from "../../models/role/RoleModel"
 import { CompanyModel } from "../../models/user/companyDetailModel"
 import { UserModel } from "../../models/user/userModel"
 
 export const UserController = {
     async getUser(req, res) {
-        const user = await UserModel.findAll({})
+        const user = await UserModel.findAll({
+            include: [
+                {
+                    model: CompanyModel,
+                    required: false,
+                    as: "as_company_detail"
+                },
+                {
+                    model: RoleModel,
+                    required: false,
+                    as: "as_role"
+                }
+            ]
+        })
 
         res.send(user)
     },
+
     async addCompanyDetail(req, res) {
         const { company_name,
             company_address,
@@ -32,7 +47,19 @@ export const UserController = {
         const exist = await UserModel.findOne({
             where: {
                 email
-            }
+            },
+            include: [
+                {
+                    model: RoleModel,
+                    required: false,
+                    as: "as_role"
+                },
+                {
+                    model: CompanyModel,
+                    required: false,
+                    as: "as_company_detail"
+                }
+            ]
         })
         if (!exist) {
             res.status(404).send({
