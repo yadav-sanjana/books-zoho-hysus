@@ -10,12 +10,14 @@ export const UserController = {
                 {
                     model: CompanyModel,
                     required: false,
-                    as: "as_company_detail"
+                    as: "as_company_detail",
+                    attributes: ["id", "company_name", "company_address", "company_city", "company_country", "company_zip"]
                 },
                 {
                     model: RoleModel,
                     required: false,
-                    as: "as_role"
+                    as: "as_role",
+                    attributes: ["id", "role"]
                 }
             ]
         })
@@ -52,12 +54,14 @@ export const UserController = {
                 {
                     model: RoleModel,
                     required: false,
-                    as: "as_role"
+                    as: "as_role",
+                    attributes: ["id", "role"]
                 },
                 {
                     model: CompanyModel,
                     required: false,
-                    as: "as_company_detail"
+                    as: "as_company_detail",
+                    attributes: ["id", "company_name", "company_address", "company_city", "company_country", "company_zip"]
                 }
             ]
         })
@@ -77,7 +81,7 @@ export const UserController = {
     },
 
     async createUser(req, res) {
-        const { role, email, company_id } = req.body
+        const { role, email, company_id, name } = req.body
         const sqlUID = req.sqlUID
 
         const exists = await UserModel.findOne({
@@ -93,6 +97,7 @@ export const UserController = {
         const user = await UserModel.create({
             role,
             email,
+            name,
             company_id,
             created_by: sqlUID
         })

@@ -9,6 +9,10 @@ export const UserModel = db.define('user', {
         autoIncrement: true,
         primaryKey: true
     },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     role: {
         type: DataTypes.INTEGER,
         allowNull: false
