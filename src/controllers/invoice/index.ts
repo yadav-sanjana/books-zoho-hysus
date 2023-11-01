@@ -199,7 +199,7 @@ export const InvoiceController = {
                 ATC,
                 file: "publicUrl", // Use the public URL here
                 terms,
-                cart_id : cart?.dataValues?.id,
+                cart_id: cart?.dataValues?.id,
                 due_date,
                 created_by: sqlUID,
             });
@@ -236,6 +236,24 @@ export const TermController = {
     },
     async allTerms(req, res) {
         const terms = await TermModel.findAll({})
+
+        res.send(terms)
+    },
+    async getTermByID(req, res) {
+        const id = req.params.id
+        const terms = await TermModel.findOne({
+            where: {
+                id
+            }
+        })
+
+        if (!terms) {
+            res.status(404).send({
+                message: "No term found"
+            })
+
+            return
+        }
 
         res.send(terms)
     }

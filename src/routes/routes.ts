@@ -29,6 +29,7 @@ router.post('/sales-person', auth, SalePersonController.addSalesPerson)
 //terms
 router.get('/terms', TermController.allTerms)
 router.post('/terms', auth, TermController.createTerm)
+router.get('/terms/:id', TermController.getTermByID)
 
 //invoice
 router.get('/invoice', InvoiceController.getAllInvoiceList)
