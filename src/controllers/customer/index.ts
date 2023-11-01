@@ -2,10 +2,19 @@ import { stripe } from "../../config/stripe"
 import { CartModel, CustomerModel } from "../../models/customer/customerModel"
 // import razorpayConfig from '../../config/razorpay';
 import axios from 'axios';
+import { CompanyModel } from "../../models/user/companyDetailModel";
 
 export const CustomerController = {
     async getAllCustomer(req, res) {
-        const customerList = await CustomerModel.findAll({})
+        const customerList = await CustomerModel.findAll({
+            include : [
+                {
+                    model : CompanyModel,
+                    required:false,
+                    as: "as_company"
+                }
+            ]
+        })
 
         res.send(customerList)
     },
@@ -16,7 +25,14 @@ export const CustomerController = {
         const customer = await CustomerModel.findOne({
             where: {
                 id
-            }
+            },
+              include : [
+                {
+                    model : CompanyModel,
+                    required:false,
+                    as: "as_company"
+                }
+            ]
         })
 
         if (!customer) {

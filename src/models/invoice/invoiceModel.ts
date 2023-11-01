@@ -8,11 +8,6 @@ export const InvoiceModel = db.define('invoice', {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
-
-    },
-    cart_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true
     },
     customer: {
         type: DataTypes.INTEGER,
@@ -157,5 +152,5 @@ InvoiceModel.hasOne(CustomerModel, { sourceKey: 'customer', foreignKey: 'id', as
 InvoiceModel.hasOne(SalesPersonModel, { sourceKey: 'sales_person', foreignKey: 'id', as: "as_sales_person" })
 InvoiceModel.hasOne(TermModel, { sourceKey: 'terms', foreignKey: 'id', as: "as_terms" })
 InvoiceModel.hasMany(ItemModel, { sourceKey: 'invoice_no', foreignKey: 'id', as: "as_items" })
-InvoiceModel.hasOne(CartModel, { sourceKey: 'cart_id', foreignKey: 'id', as: "invoice_cart" })
+// InvoiceModel.hasOne(CartModel, { sourceKey: 'cart_id', foreignKey: 'id', as: "invoice_cart" })
 

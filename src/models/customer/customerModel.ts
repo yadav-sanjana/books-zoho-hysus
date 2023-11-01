@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { db } from "../../config/db";
+import { CompanyModel } from "../user/companyDetailModel";
 
 export const CustomerModel = db.define('customer', {
     id: {
@@ -59,6 +60,10 @@ export const CustomerModel = db.define('customer', {
     website: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    company_detail : {
+        type : DataTypes.INTEGER,
+        allowNull : true
     },
     created_by: {
         type: DataTypes.INTEGER,
@@ -134,5 +139,6 @@ export const CartDetailModel = db.define("cart_detail", {
     timestamps: true
 })
 
-CartModel.hasOne(CustomerModel, { sourceKey: "customer_id", foreignKey: "id" })
-CartModel.hasMany(CartDetailModel, { sourceKey: "id", foreignKey: "cart_id", as: "cart_details" })
+// CartModel.hasOne(CustomerModel, { sourceKey: "customer_id", foreignKey: "id" })
+// CartModel.hasMany(CartDetailModel, { sourceKey: "id", foreignKey: "cart_id", as: "cart_details" })
+CustomerModel.hasOne(CompanyModel, { sourceKey: "company_detail", foreignKey:"id", as:"as_company"})
