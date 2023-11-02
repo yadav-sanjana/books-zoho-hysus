@@ -19,7 +19,7 @@ export const db = new Sequelize('zoho-dev', 'hysus-admin','8jcfbtt_rh)x', {
   dialectOptions: {
     connectTimeout: 60000,
   },
-  logging: true
+  logging: false
 });
 
 

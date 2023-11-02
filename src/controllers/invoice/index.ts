@@ -103,74 +103,33 @@ export const InvoiceController = {
     },
     async createInvoice(req, res) {
         const sqlUID = req.sqlUID;
+
         const {
             customer,
             invoice_no,
-            order_no,
             sales_person,
             subject,
             customer_notes,
             ATC,
             terms,
+            tableData,
+            discount,
+            tax,
+            balance
         } = req.body;
+
 
         const cart = await CartModel.findOne({
             where: {
                 customer_id: customer
             }
         })
+        const cart_id = cart?.dataValues.id
 
-        const cart_detail = await CartDetailModel.findAll({
-            where: {
-                cart_id: cart?.dataValues?.id
-            }
-        })
-
-        const valuesAmount = cart_detail.map((amt) => {
-            return amt.dataValues.amount
-        })
-
-        const amount = valuesAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        const totalAmount = tableData.reduce((total, item) => total + parseFloat(item.amount), 0);
 
         const termId = Number(terms);
         const invoice_date: Date = new Date(req.body.invoice_date);
-        if (!req.file) {
-            return res.status(400).send('No file uploaded.');
-        }
-        if (req.file) {
-            const filename = Date.now() + '_' + req.file.originalname;
-            const file = bucket.file(filename);
-
-            try {
-                const fileStream = file.createWriteStream({
-                    metadata: {
-                        contentType: req.file.mimetype,
-                    },
-                });
-
-                fileStream.on('error', (err) => {
-                    console.error(err);
-                    res.status(500).send('Error uploading file: ' + err.message);
-                });
-
-                fileStream.on('finish', async () => {
-                    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`;
-                    console.log('File uploaded. URL:', publicUrl);
-
-                    // Here, you can save the publicUrl to your database
-                    // For example, using a database model like Mongoose or Sequelize
-
-                    // Respond with the public URL
-                    res.status(200).json({ url: publicUrl });
-                });
-
-                // fileStream.end(req.file.buffer);
-            } catch (err) {
-                console.log(err.message);
-                return
-            }
-
-        }
         try {
             const termExists = await TermModel.findOne({
                 where: {
@@ -188,10 +147,11 @@ export const InvoiceController = {
             const termsDay = termExists?.dataValues?.days;
             const due_date = extendDateByDays(invoice_date, termsDay);
 
+            // Create the invoice with provided data
             const invoice = await InvoiceModel.create({
                 customer,
                 invoice_no,
-                order_no,
+                order_no: null, // You can set this to null or provide a value
                 invoice_date,
                 sales_person,
                 subject,
@@ -202,18 +162,60 @@ export const InvoiceController = {
                 cart_id: cart?.dataValues?.id,
                 due_date,
                 created_by: sqlUID,
+                discount,
+                tax,
+                amount: totalAmount,
+                balance
             });
 
+            console.log(invoice?.dataValues?.id)
+
+            // Create items based on tableData
+            const items = [];
+            for (const itemData of tableData) {
+                items.push({
+                    invoice_id: invoice?.dataValues?.id,
+                    cart_id,
+                    item: itemData.item,
+                    description: itemData.description,
+                    rate: itemData.rate,
+                    qty: itemData.qty,
+                    tax: itemData.tax,
+                    amount: itemData.amount,
+                });
+            }
+
+            // Bulk create items
+            await ItemModel.bulkCreate(items);
+
+            const taxableAmount = totalAmount - discount
+            const payableAmount = taxableAmount + tax
+
+            if (cart) {
+                await CartModel.update({
+                    total_amount: totalAmount,
+                    discount,
+                    tax,
+                    payableAmount
+                },
+                    {
+                        where: {
+                            id: cart.dataValues.id,
+                        },
+                    }
+                );
+            }
+
+
             res.status(200).send(invoice);
-
-
-
         } catch (error) {
             res.status(500).send({
                 error: error.message,
             });
         }
     }
+
+
 
 }
 
