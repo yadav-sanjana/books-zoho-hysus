@@ -25,6 +25,9 @@ router.patch('/customer/:id', CustomerController.updateCustomer)
 //salesperson
 router.get('/sales-person', SalePersonController.getSalesPerson)
 router.post('/sales-person', auth, SalePersonController.addSalesPerson)
+router.patch('/sales-person/:id', auth, SalePersonController.updateSalesPerson)
+router.get('/sales-person/:id', auth, SalePersonController.getSalesPersonById)
+
 
 //terms
 router.get('/terms', TermController.allTerms)

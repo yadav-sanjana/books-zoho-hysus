@@ -90,15 +90,15 @@ export const InvoiceController = {
             return
         }
 
-        const items = await ItemModel.findAll({
-            where: {
-                invoice_no: id
-            }
-        })
+        // const items = await ItemModel.findAll({
+        //     where: {
+        //         invoice_no: id
+        //     }
+        // })
 
         res.send({
             invoice: invoice,
-            details: items
+            // details: items
         })
     },
     async createInvoice(req, res) {
@@ -214,9 +214,6 @@ export const InvoiceController = {
             });
         }
     }
-
-
-
 }
 
 export const TermController = {
