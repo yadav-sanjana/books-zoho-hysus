@@ -124,7 +124,7 @@ export const UserController = {
 
     async createUser(req, res) {
         const { role, email, company_id, name } = req.body
-        const sqlUID = req.sqlUID
+        // const sqlUID = req.sqlUID
 
         const exists = await UserModel.findOne({
             where: { email }
@@ -141,7 +141,7 @@ export const UserController = {
             email,
             name,
             company_id,
-            created_by: sqlUID
+            // created_by: sqlUID
         })
 
         res.send(user)

@@ -12,7 +12,7 @@ const router = express.Router()
 //user
 router.get('/user', UserController.getUser)
 router.get('/user/:email', UserController.getUserToken)
-router.post('/user', auth, UserController.createUser)
+router.post('/user', UserController.createUser)
 router.post('/company', auth, UserController.addCompanyDetail)
 router.get('/user-info', auth, UserController.getUserByToken)
 

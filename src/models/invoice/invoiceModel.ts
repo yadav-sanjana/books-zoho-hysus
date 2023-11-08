@@ -155,7 +155,7 @@ export const ItemModel = db.define('item', {
 InvoiceModel.hasOne(CustomerModel, { sourceKey: 'customer', foreignKey: 'id', as: "as_customer" })
 InvoiceModel.hasOne(SalesPersonModel, { sourceKey: 'sales_person', foreignKey: 'id', as: "as_sales_person" })
 InvoiceModel.hasOne(TermModel, { sourceKey: 'terms', foreignKey: 'id', as: "as_terms" })
-InvoiceModel.hasMany(ItemModel, { sourceKey: 'invoice_no', foreignKey: 'id', as: "as_items" })
+// InvoiceModel.hasMany(ItemModel, { sourceKey: 'invoice_no', foreignKey: 'id', as: "as_items" })
 ItemModel.hasOne(CartModel ,{sourceKey : "cart_id", foreignKey:"id", as:"as_cart"})
 // InvoiceModel.hasOne(CartModel, { sourceKey: 'cart_id', foreignKey: 'id', as: "invoice_cart" })
 
