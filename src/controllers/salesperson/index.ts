@@ -29,7 +29,7 @@ export const SalePersonController = {
             res.send(person)
         } catch (error) {
             res.status(500).send({
-                error: error.message
+                message: error.message
             })
         }
     },
@@ -42,14 +42,14 @@ export const SalePersonController = {
     async getSalesPersonById(req, res) {
         const id = req.params.id
         const person = await SalesPersonModel.findOne({
-            where : {
+            where: {
                 id
             }
         })
 
-        if(!person){
+        if (!person) {
             res.status(404).send({
-                message : "Sales Person not Found"
+                message: "Sales Person not Found"
             })
             return
         }
@@ -90,7 +90,7 @@ export const SalePersonController = {
             })
 
             res.send({
-                message : "Updated Successfully"
+                message: "Updated Successfully"
             })
 
         } catch (error) {

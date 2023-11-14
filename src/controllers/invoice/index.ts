@@ -46,7 +46,7 @@ export const InvoiceController = {
 
     async getInvoiceById(req, res) {
         const id = req.params.id
-        const invoice = await InvoiceModel.findOne({
+        const invoice = await InvoiceModel.findAll({
             where: {
                 id
             },
@@ -68,19 +68,11 @@ export const InvoiceController = {
                     as: "as_terms",
                     attributes: ["id", "term", "days"]
                 },
-                // {
-                //     model: CartModel,
-                //     required: false,
-                //     as: "invoice_cart",
-                //     attributes: ["id", "customer_id"],
-                //     include: [
-                //         {
-                //             model: CartDetailModel,
-                //             required: false,
-                //             as: "cart_details"
-                //         }
-                //     ]
-                // }
+                {
+                    model: ItemModel,
+                    required: false,
+                    as: "as_items"
+                }
             ]
         })
         if (!invoice) {

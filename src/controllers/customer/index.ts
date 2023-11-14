@@ -7,10 +7,10 @@ import { CompanyModel } from "../../models/user/companyDetailModel";
 export const CustomerController = {
     async getAllCustomer(req, res) {
         const customerList = await CustomerModel.findAll({
-            include : [
+            include: [
                 {
-                    model : CompanyModel,
-                    required:false,
+                    model: CompanyModel,
+                    required: false,
                     as: "as_company"
                 }
             ]
@@ -26,10 +26,10 @@ export const CustomerController = {
             where: {
                 id
             },
-              include : [
+            include: [
                 {
-                    model : CompanyModel,
-                    required:false,
+                    model: CompanyModel,
+                    required: false,
                     as: "as_company"
                 }
             ]
@@ -105,7 +105,7 @@ export const CustomerController = {
                 work_phone,
                 mobile_phone,
                 website,
-                created_by: sqlUID
+
             })
 
             await CartModel.create({
@@ -115,7 +115,7 @@ export const CustomerController = {
             res.send(customer)
         } catch (error) {
             res.status(500).send({
-                error: error.message
+                message: error.message
             })
         }
     },
@@ -150,7 +150,7 @@ export const CustomerController = {
             })
         } catch (error) {
             res.status(500).send({
-                error: error.message
+                message: error.message
             })
         }
     }
