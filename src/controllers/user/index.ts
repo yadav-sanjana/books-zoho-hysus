@@ -27,7 +27,7 @@ export const UserController = {
     async getUserByToken(req, res) {
         const id = req.sqlUID
         const user = await UserModel.findOne({
-            where : {
+            where: {
                 id
             },
             include: [
@@ -35,7 +35,7 @@ export const UserController = {
                     model: CompanyModel,
                     required: false,
                     as: "as_company_detail",
-                    attributes: ["id","company_logo", "company_name", "company_address", "company_city", "company_country", "company_zip"]
+                    attributes: ["id", "company_logo", "company_name", "company_address", "company_city", "company_country", "company_zip"]
                 },
                 {
                     model: RoleModel,
@@ -72,14 +72,14 @@ export const UserController = {
             company_country,
             company_zip,
             company_logo,
-            created_by : req.sqlUID
+            created_by: req.sqlUID
         })
 
         await UserModel.update({
-            company_id : company?.get("id")
-        },{
-            where : {
-                id : req.sqlUID
+            company_id: company?.get("id")
+        }, {
+            where: {
+                id: req.sqlUID
             }
         })
 
@@ -121,6 +121,25 @@ export const UserController = {
             token: token
         })
     },
+    async getCompanyDetail(req, res) {
+        const id = req.params.id
+
+        const exists = await CompanyModel.findOne({
+            where: {
+                id
+            }
+        })
+
+        if (!exists) {
+            res.status(404).send({
+                message: "No such company"
+            })
+            return
+        }
+
+        res.send(exists)
+    }
+    ,
 
     async createUser(req, res) {
         const { role, email, company_id, name } = req.body

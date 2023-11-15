@@ -61,9 +61,9 @@ export const CustomerModel = db.define('customer', {
         type: DataTypes.STRING,
         allowNull: true
     },
-    company_detail : {
-        type : DataTypes.INTEGER,
-        allowNull : true
+    company_detail: {
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
     created_by: {
         type: DataTypes.INTEGER,
@@ -108,37 +108,7 @@ export const CartModel = db.define('customer_cart', {
     timestamps: true
 })
 
-export const CartDetailModel = db.define("cart_detail", {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    cart_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    item: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    quantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 1
-    },
-    rate: {
-        type: DataTypes.FLOAT,
-        allowNull: true
-    },
-    amount: {
-        type: DataTypes.FLOAT,
-        allowNull: true
-    }
-}, {
-    timestamps: true
-})
 
-// CartModel.hasOne(CustomerModel, { sourceKey: "customer_id", foreignKey: "id" })
-// CartModel.hasMany(CartDetailModel, { sourceKey: "id", foreignKey: "cart_id", as: "cart_details" })
-CustomerModel.hasOne(CompanyModel, { sourceKey: "company_detail", foreignKey:"id", as:"as_company"})
+ 
+CartModel.belongsTo(CustomerModel, { foreignKey: 'customer_id' })
+CustomerModel.belongsTo(CompanyModel, { foreignKey: 'company_detail', as: 'as_company' })

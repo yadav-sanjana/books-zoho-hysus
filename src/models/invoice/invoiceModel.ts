@@ -152,10 +152,11 @@ export const ItemModel = db.define('item', {
 })
 
 
-InvoiceModel.hasOne(CustomerModel, { sourceKey: 'customer', foreignKey: 'id', as: "as_customer" })
-InvoiceModel.hasOne(SalesPersonModel, { sourceKey: 'sales_person', foreignKey: 'id', as: "as_sales_person" })
-InvoiceModel.hasOne(TermModel, { sourceKey: 'terms', foreignKey: 'id', as: "as_terms" })
-InvoiceModel.hasMany(ItemModel, { sourceKey: 'invoice_no', foreignKey: 'id', as: "as_items" })
-// ItemModel.hasOne(CartModel ,{sourceKey : "cart_id", foreignKey:"id", as:"as_cart"})
-// InvoiceModel.hasOne(CartModel, { sourceKey: 'cart_id', foreignKey: 'id', as: "invoice_cart" })
+InvoiceModel.belongsTo(CustomerModel, { foreignKey: 'customer', as: "as_customer" })
 
+InvoiceModel.belongsTo(SalesPersonModel, { foreignKey: 'sales_person', as: "as_sales_person" })
+
+InvoiceModel.belongsTo(TermModel, { foreignKey: 'terms', as: "as_terms" })
+InvoiceModel.hasMany(ItemModel, { foreignKey: 'invoice_id', as: "as_items" })
+ItemModel.belongsTo(InvoiceModel, { foreignKey: 'invoice_id', as: "as_invoice" })
+ItemModel.hasOne(CartModel, { foreignKey: "id", sourceKey: "cart_id", as: "as_cart" })
