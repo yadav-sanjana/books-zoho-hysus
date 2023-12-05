@@ -116,6 +116,12 @@ export const InvoiceController = {
                 customer_id: customer
             }
         })
+        if (!cart) {
+            res.status(404).send({
+                message: "creat cart first"
+            })
+            return
+        }
         const cart_id = cart?.dataValues.id
 
         const totalAmount = tableData.reduce((total, item) => total + parseFloat(item.amount), 0);

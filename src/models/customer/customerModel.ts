@@ -139,6 +139,6 @@ export const CartDetailModel = db.define("cart_detail", {
     timestamps: true
 })
 
-// CartModel.hasOne(CustomerModel, { sourceKey: "customer_id", foreignKey: "id" })
-// CartModel.hasMany(CartDetailModel, { sourceKey: "id", foreignKey: "cart_id", as: "cart_details" })
+CartModel.hasOne(CustomerModel, { sourceKey: "customer_id", foreignKey: "id" })
+CartModel.hasMany(CartDetailModel, { sourceKey: "id", foreignKey: "cart_id", as: "cart_details" })
 CustomerModel.hasOne(CompanyModel, { sourceKey: "company_detail", foreignKey:"id", as:"as_company"})
