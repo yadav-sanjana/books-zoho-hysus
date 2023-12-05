@@ -1,97 +1,116 @@
-import { bucket } from "../../config/fileStorage"
 import { extendDateByDays } from "../../middlewares/dateExtend"
-import { CartDetailModel, CartModel, CustomerModel } from "../../models/customer/customerModel"
+import { CartModel, CustomerModel } from "../../models/customer/customerModel"
 import { InvoiceModel, ItemModel, TermModel } from "../../models/invoice/invoiceModel"
 import { SalesPersonModel } from "../../models/salesperson/salesPersonModel"
+import { CompanyModel } from "../../models/user/companyDetailModel"
 
 export const InvoiceController = {
     async getAllInvoiceList(req, res) {
-        const invoiceList = await InvoiceModel.findAll({
-            include: [
-                {
-                    model: CustomerModel,
-                    required: true,
-                    as: "as_customer"
-                },
-                {
-                    model: SalesPersonModel,
-                    required: true,
-                    as: "as_sales_person",
-                    attributes: ["id", "email", "name"]
-                },
-                {
-                    model: TermModel,
-                    required: false,
-                    as: "as_terms",
-                    attributes: ["id", "term", "days"]
-                }
-                // , {
-                //     model: CartModel,
-                //     required: false,
-                //     as: "invoice_cart",
-                //     attributes: ["id", "customer_id"],
-                //     include: [
-                //         {
-                //             model: CartDetailModel,
-                //             required: false,
-                //             as: "cart_details"
-                //         }
-                //     ]
-                // }
-            ]
-        })
+        try {
+            const invoiceList = await InvoiceModel.findAll({
+                include: [
+                    {
+                        model: CustomerModel,
+                        required: false,
+                        as: 'as_customer',
+                    },
+                    {
+                        model: ItemModel,
+                        required: false,
+                        as: "as_items",
+                        include: [
+                            {
+                                model: CartModel,
+                                required: false,
+                                as: "as_cart"
+                            }
+                        ]
+                    },
+                    {
+                        model: SalesPersonModel,
+                        required: false,
+                        as: 'as_sales_person',
+                        attributes: ['id', 'email', 'name']
+                    },
+                    {
+                        model: TermModel,
+                        required: false,
+                        as: 'as_terms',
+                        attributes: ['id', 'term', 'days']
+                    },
 
-        res.send(invoiceList)
+                ]
+            });
+
+            res.send(invoiceList)
+        } catch (error) {
+            res.status(500).send({
+                error: error.message
+            })
+        }
     },
 
     async getInvoiceById(req, res) {
         const id = req.params.id
-        const invoice = await InvoiceModel.findAll({
-            where: {
-                id
-            },
-            include: [
-                {
-                    model: CustomerModel,
-                    required: false,
-                    as: "as_customer"
+        try {
+            const invoice = await InvoiceModel.findAll({
+                where: {
+                    id
                 },
-                {
-                    model: SalesPersonModel,
-                    required: false,
-                    as: "as_sales_person",
-                    attributes: ["id", "email", "name"]
-                },
-                {
-                    model: TermModel,
-                    required: false,
-                    as: "as_terms",
-                    attributes: ["id", "term", "days"]
-                },
-                {
-                    model: ItemModel,
-                    required: false,
-                    as: "as_items"
-                }
-            ]
-        })
-        if (!invoice) {
-            res.status(404).send({
-                message: "Invoice not found"
+                include: [
+                    {
+                        model: CustomerModel,
+                        required: false,
+                        as: 'as_customer',
+                        include : [
+                            {
+                                model : CompanyModel,
+                                required:false,
+                                as: "as_company"
+                            }
+                        ]
+                    },
+                    {
+                        model: ItemModel,
+                        required: false,
+                        as: "as_items",
+                        include: [
+                            {
+                                model: CartModel,
+                                required: false,
+                                as: "as_cart"
+                            }
+                        ]
+                    },
+                    {
+                        model: SalesPersonModel,
+                        required: false,
+                        as: 'as_sales_person',
+                        attributes: ['id', 'email', 'name'],
+                    },
+                    {
+                        model: TermModel,
+                        required: false,
+                        as: 'as_terms',
+                        attributes: ['id', 'term', 'days']
+                    },
+
+                ]
+            });
+
+            if (!invoice) {
+                res.status(404).send({
+                    message: "Invoice not found"
+                })
+                return
+            }
+
+            res.send(invoice)
+        } catch (error) {
+            res.status(500).send({
+                error: error.message
             })
-            return
         }
-
-        // const items = await ItemModel.findAll({
-        //     where: {
-        //         invoice_no: id
-        //     }
-        // })
-
-        res.send({
-            invoice: invoice,
-            // details: items
-        })
     },
     async createInvoice(req, res) {
         const sqlUID = req.sqlUID;
@@ -256,196 +275,196 @@ export const TermController = {
     }
 }
 
-export const ItemController = {
-    async addItem(req, res) {
-        try {
-            const { item,
-                quantity,
-                rate,
-                amount,
-            } = req.body
+// export const ItemController = {
+//     async addItem(req, res) {
+//         try {
+//             const { item,
+//                 quantity,
+//                 rate,
+//                 amount,
+//             } = req.body
 
-            const customer_id = req.params.id
+//             const customer_id = req.params.id
 
-            const cart_exists = await CartModel.findOne({
-                where: {
-                    customer_id
-                }
-            })
-            const itemAdd = await CartDetailModel.create({
-                item,
-                quantity,
-                rate,
-                amount,
-                cart_id: cart_exists?.dataValues?.id
-            })
+//             const cart_exists = await CartModel.findOne({
+//                 where: {
+//                     customer_id
+//                 }
+//             })
+//             const itemAdd = await CartDetailModel.create({
+//                 item,
+//                 quantity,
+//                 rate,
+//                 amount,
+//                 cart_id: cart_exists?.dataValues?.id
+//             })
 
-            if (cart_exists) {
-                const cart_detail = await CartDetailModel.findAll({
-                    where: {
-                        cart_id: cart_exists?.dataValues?.id
-                    }
-                })
+//             if (cart_exists) {
+//                 const cart_detail = await CartDetailModel.findAll({
+//                     where: {
+//                         cart_id: cart_exists?.dataValues?.id
+//                     }
+//                 })
 
-                const valuesAmount = cart_detail.map((amt) => {
-                    return amt.dataValues.amount
-                })
+//                 const valuesAmount = cart_detail.map((amt) => {
+//                     return amt.dataValues.amount
+//                 })
 
-                const totalAmount = valuesAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+//                 const totalAmount = valuesAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-                await CartModel.update({
-                    total_amount: totalAmount
-                }, {
-                    where: {
-                        id: cart_exists?.dataValues?.id
-                    }
-                })
-            }
+//                 await CartModel.update({
+//                     total_amount: totalAmount
+//                 }, {
+//                     where: {
+//                         id: cart_exists?.dataValues?.id
+//                     }
+//                 })
+//             }
 
-            res.send(itemAdd)
-        } catch (error) {
-            res.status(500).send({
-                error: error.message
-            })
-        }
-    },
+//             res.send(itemAdd)
+//         } catch (error) {
+//             res.status(500).send({
+//                 error: error.message
+//             })
+//         }
+//     },
 
-    async updateCartItem(req, res) {
-        try {
+//     async updateCartItem(req, res) {
+//         try {
 
-            const id = req.params.id
-            const exists = await CartDetailModel.findOne({
-                where: {
-                    id
-                }
-            })
-            if (!exists) {
-                res.status(404).send({
-                    message: "No such item found"
-                })
-            }
+//             const id = req.params.id
+//             const exists = await CartDetailModel.findOne({
+//                 where: {
+//                     id
+//                 }
+//             })
+//             if (!exists) {
+//                 res.status(404).send({
+//                     message: "No such item found"
+//                 })
+//             }
 
-            const { item, quantity, rate, amount } = req.body
-            const updatedItem = await CartDetailModel.update({
-                item,
-                quantity,
-                rate,
-                amount
-            }, {
-                where: {
-                    id
-                }
-            })
+//             const { item, quantity, rate, amount } = req.body
+//             const updatedItem = await CartDetailModel.update({
+//                 item,
+//                 quantity,
+//                 rate,
+//                 amount
+//             }, {
+//                 where: {
+//                     id
+//                 }
+//             })
 
-            const cart_detail = await CartDetailModel.findAll({
-                where: {
-                    cart_id: exists?.dataValues?.cart_id
-                }
-            })
-
-
-            const valuesAmount = cart_detail.map((amt) => {
-                return amt.dataValues.amount
-            })
-
-            const totalAmount = valuesAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-
-            await CartModel.update({
-                total_amount: totalAmount
-            }, {
-                where: {
-                    id: exists?.dataValues?.cart_id
-                }
-            })
+//             const cart_detail = await CartDetailModel.findAll({
+//                 where: {
+//                     cart_id: exists?.dataValues?.cart_id
+//                 }
+//             })
 
 
-            res.send({
-                message: "Updated successfully"
-            })
+//             const valuesAmount = cart_detail.map((amt) => {
+//                 return amt.dataValues.amount
+//             })
 
-        } catch (error) {
-            res.status(500).send({
-                error: error.message
-            })
-        }
-    },
-    async fetchItems(req, res) {
-        try {
-            const customer_id = req.params.id
+//             const totalAmount = valuesAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-            const cart = await CartModel.findOne({
-                where: {
-                    customer_id
-                }
-            })
+//             await CartModel.update({
+//                 total_amount: totalAmount
+//             }, {
+//                 where: {
+//                     id: exists?.dataValues?.cart_id
+//                 }
+//             })
 
-            const itemList = await CartModel.findAll({
-                where: {
-                    customer_id
-                },
-                attributes: ["id", "customer_id", "discount", "tax", "total_amount", "payableAmount"],
-                include: [
-                    {
-                        model: CartDetailModel,
-                        required: false,
-                        as: "cart_details",
-                    }
-                ]
-            })
 
-            res.send(itemList)
-        } catch (err) {
-            res.status(500).send({
-                error: err.message
-            })
-        }
-    },
-    async fetchSingleItem(req, res) {
-        try {
+//             res.send({
+//                 message: "Updated successfully"
+//             })
 
-            const id = req.params.item_id
-            const item = await CartDetailModel.findOne({
-                where: {
-                    id
-                }
-            })
+//         } catch (error) {
+//             res.status(500).send({
+//                 error: error.message
+//             })
+//         }
+//     },
+//     async fetchItems(req, res) {
+//         try {
+//             const customer_id = req.params.id
 
-            res.send(item)
-        } catch (error) {
-            res.status(500).send({
-                error: error.message
-            })
-        }
-    },
+//             const cart = await CartModel.findOne({
+//                 where: {
+//                     customer_id
+//                 }
+//             })
 
-    async updateCart(req, res) {
-        try {
-            const {
-                discount,
-                tax,
-                total_amount,
-                payableAmount
-            } = req.body
+//             const itemList = await CartModel.findAll({
+//                 where: {
+//                     customer_id
+//                 },
+//                 attributes: ["id", "customer_id", "discount", "tax", "total_amount", "payableAmount"],
+//                 include: [
+//                     {
+//                         model: CartDetailModel,
+//                         required: false,
+//                         as: "cart_details",
+//                     }
+//                 ]
+//             })
 
-            const customer_id = req.params.id
+//             res.send(itemList)
+//         } catch (err) {
+//             res.status(500).send({
+//                 error: err.message
+//             })
+//         }
+//     },
+//     async fetchSingleItem(req, res) {
+//         try {
 
-            const updateCart = await CartModel.update({
-                discount,
-                tax,
-                total_amount,
-                payableAmount
-            }, {
-                where: {
-                    customer_id
-                }
-            })
+//             const id = req.params.item_id
+//             const item = await CartDetailModel.findOne({
+//                 where: {
+//                     id
+//                 }
+//             })
 
-            res.send(updateCart)
-        } catch (error) {
-            res.status(500).send({
-                error: error.message
-            })
-        }
+//             res.send(item)
+//         } catch (error) {
+//             res.status(500).send({
+//                 error: error.message
+//             })
+//         }
+//     },
 
-    }
-}
+//     async updateCart(req, res) {
+//         try {
+//             const {
+//                 discount,
+//                 tax,
+//                 total_amount,
+//                 payableAmount
+//             } = req.body
+
+//             const customer_id = req.params.id
+
+//             const updateCart = await CartModel.update({
+//                 discount,
+//                 tax,
+//                 total_amount,
+//                 payableAmount
+//             }, {
+//                 where: {
+//                     customer_id
+//                 }
+//             })
+
+//             res.send(updateCart)
+//         } catch (error) {
+//             res.status(500).send({
+//                 error: error.message
+//             })
+//         }
+
+//     }
+// }
