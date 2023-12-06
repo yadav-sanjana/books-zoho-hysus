@@ -129,10 +129,12 @@ export const InvoiceController = {
             balance
         } = req.body;
 
+        const customer_id = customer as Number
+
 
         const cart = await CartModel.findOne({
             where: {
-                customer_id: customer
+                customer_id
             }
         })
         if (!cart) {
