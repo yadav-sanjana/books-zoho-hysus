@@ -15,7 +15,7 @@ export const UserModel = db.define('user', {
     },
     role: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     email: {
         type: DataTypes.STRING,
@@ -37,5 +37,7 @@ export const UserModel = db.define('user', {
     timestamps: true
 })
 
-UserModel.hasOne(CompanyModel, { sourceKey: "company_id", foreignKey: "id", as: "as_company_detail" })
-UserModel.hasOne(RoleModel, { sourceKey: 'role', foreignKey: 'id', as: "as_role" })
+UserModel.belongsTo(CompanyModel, {
+    foreignKey: 'company_id',
+    as: 'as_company_detail'
+});

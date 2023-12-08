@@ -37,5 +37,3 @@ export const SalesPersonModel = db.define('sale_person', {
         allowNull: true
     }
 })
-
-SalesPersonModel.hasOne(RoleModel, { sourceKey: 'role', foreignKey: 'id', as: "as_role" })

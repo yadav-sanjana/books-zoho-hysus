@@ -131,7 +131,6 @@ export const InvoiceController = {
 
         const customer_id = customer as Number
 
-
         const cart = await CartModel.findOne({
             where: {
                 customer_id
