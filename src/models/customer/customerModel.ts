@@ -111,4 +111,4 @@ export const CartModel = db.define('customer_cart', {
 
  
 CartModel.belongsTo(CustomerModel, { foreignKey: 'customer_id' })
-CustomerModel.belongsTo(CompanyModel, { foreignKey: 'company_detail', as: 'as_company' })
+CustomerModel.belongsTo(CompanyModel, { foreignKey: 'id', as: 'as_company' })

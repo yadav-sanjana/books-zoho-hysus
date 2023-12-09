@@ -17,7 +17,7 @@ export const UserController = {
                     model: RoleModel,
                     required: false,
                     as: "as_role",
-                    attributes: ["id", "role"]
+                    attributes: ["id", "name"]
                 }
             ]
         })
@@ -41,7 +41,7 @@ export const UserController = {
                     model: RoleModel,
                     required: false,
                     as: "as_role",
-                    attributes: ["id", "role"]
+                    attributes: ["id", "name"]
                 }
             ]
         })
@@ -97,7 +97,7 @@ export const UserController = {
                     model: RoleModel,
                     required: false,
                     as: "as_role",
-                    attributes: ["id", "role"]
+                    attributes: ["id", "name"]
                 },
                 {
                     model: CompanyModel,

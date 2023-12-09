@@ -150,9 +150,9 @@ export const ItemModel = db.define('item', {
 }, {
     timestamps: true
 })
-InvoiceModel.belongsTo(CustomerModel, { foreignKey: 'customer_id', as: 'as_customer' });
-InvoiceModel.belongsTo(SalesPersonModel, { foreignKey: 'sales_person_id', as: 'as_sales_person' });
-InvoiceModel.belongsTo(TermModel, { foreignKey: 'terms_id', as: 'as_terms' });
+InvoiceModel.belongsTo(CustomerModel, { foreignKey: 'id', as: 'as_customer' });
+InvoiceModel.belongsTo(SalesPersonModel, { foreignKey: 'id', as: 'as_sales_person' });
+InvoiceModel.belongsTo(TermModel, { foreignKey: 'id', as: 'as_terms' });
 
 InvoiceModel.hasMany(ItemModel, { foreignKey: 'invoice_id', as: 'as_items' });
 ItemModel.belongsTo(InvoiceModel, { foreignKey: 'invoice_id', as: 'as_invoice' });

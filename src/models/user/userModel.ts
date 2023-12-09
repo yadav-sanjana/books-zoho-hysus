@@ -1,7 +1,6 @@
 import { DataTypes } from "sequelize";
 import { db } from "../../config/db";
 import { CompanyModel } from "./companyDetailModel";
-import { RoleModel } from "../role/RoleModel";
 
 export const UserModel = db.define('user', {
     id: {
