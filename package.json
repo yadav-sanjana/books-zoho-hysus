@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "nodemon build/src/index.js",
-    "test" : "jest --detectOpenHandles",
+    "test": "jest",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
   },
   "repository": {

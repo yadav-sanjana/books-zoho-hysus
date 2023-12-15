@@ -8,7 +8,7 @@ app.use(express.json())
 app.use(cors())
 
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Welcome' });
+    res.status(200).send({ message: 'Welcome' });
 });
 
 try {
@@ -19,14 +19,11 @@ try {
             console.log('Connection has been established successfully.');
         })
         .catch(err => {
-            console.log('Unable to connect to the database:', err);
+            console.error('Unable to connect to the database:', err);
         });
 } catch (error) {
-    console.log('Unable to connect to the database:', error);
+    console.error('Unable to connect to the database:', error);
 }
 
-afterAll(async () => {
-    await db.close();
-    console.log('Database connection closed.');
-});
 export default app
+
