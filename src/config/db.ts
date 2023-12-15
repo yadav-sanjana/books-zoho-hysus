@@ -17,7 +17,7 @@ export const db = new Sequelize("invoicer", "hysus-admin","8jcfbtt_rh)x", {
   dialect: 'mysql',
   dialectModule: require('mysql2'),
   dialectOptions: {
-    connectTimeout: 60000,
+    connectTimeout: 80000,
   },
   logging: true
 });

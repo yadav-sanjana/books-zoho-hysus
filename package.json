@@ -2,11 +2,11 @@
   "name": "books-zoho-hysus",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "nodemon build/server.js",
-    "test" : "jest",
+    "start": "nodemon build/src/index.js",
+    "test" : "jest --detectOpenHandles",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
   },
   "repository": {
