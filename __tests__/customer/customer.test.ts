@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const Base_url = process.env.BASE_URL
+const authToken = process.env.TOKEN
 
 describe('all customer apis', () => {
 
@@ -33,27 +34,6 @@ describe('all customer apis', () => {
             expect(customerDetail.body?.firstname).toContain(customer?.dataValues?.firstname)
             expect(customerDetail.body?.customer_email).toContain(customer?.dataValues?.customer_email)
 
-            // expect(customerDetail.body).toStrictEqual({
-            //     id: 1,
-            //     customerType: "business",
-            //     contactPerson: "sanjana",
-            //     company: "hysus",
-            //     firstname: "sanjana",
-            //     lastname: "yadav",
-            //     customer_email: "sanan103@hysus.com",
-            //     skype_name: "sanjana",
-            //     designation: "developer",
-            //     work_phone: "8658389573195",
-            //     mobile_phone: "658389573195",
-            //     razorpay_id: null,
-            //     stripe_id: "cus_P9guXetPEenxrM",
-            //     website: "www.hysus.com",
-            //     company_detail: 1,
-            //     created_by: null,
-            //     updated_by: null,
-            //     createdAt: "2023-12-09T10:13:17.000Z",
-            //     updatedAt: "2023-12-09T10:13:17.000Z"
-            // })
         })
 
         test('customer details not found', async () => {
@@ -65,4 +45,104 @@ describe('all customer apis', () => {
 
         })
     })
+
+    describe('create new customer', () => {
+        test('created new customer', async () => {
+            const customerDetail = {
+                customerType: "business",
+                contactPerson: "Ayush",
+                company: "hysus",
+                username: "ayush",
+                customer_email: "Aayush@hysus.com",
+                skype_name: "ayush",
+                designation: "BD",
+                work_phone: "8658389573195",
+                mobile_phone: "658389573195",
+                website: "www.hysus.com",
+                firstname: "Ayush",
+                lastname: "Kumar"
+            }
+
+            const newCustomer = await request(Base_url)
+                .post('/customer')
+                .set('Authorization', `Bearer ${authToken}`)
+                .send(customerDetail)
+
+            expect(newCustomer.statusCode).toBe(200)
+
+            const customerRecord = await CustomerModel.findOne({
+                where : {
+                    id : newCustomer?.body?.id
+                }
+            })
+            expect(customerRecord).toBeTruthy()
+
+            expect(newCustomer.body).not.toBe(null)
+        })
+
+        test('create existing customer should return bad request', async () => {
+            const customerDetail = {
+                customerType: "business",
+                contactPerson: "Ayush",
+                company: "hysus",
+                username: "ayush",
+                customer_email: "ayush.kuma@hysus.com",
+                skype_name: "ayush",
+                designation: "BD",
+                work_phone: "8658389573195",
+                mobile_phone: "658389573195",
+                website: "www.hysus.com",
+                firstname: "Ayush",
+                lastname: "Kumar"
+            }
+
+            const newCustomer = await request(Base_url)
+                .post('/customer')
+                .set('Authorization', `Bearer ${authToken}`)
+                .send(customerDetail)
+
+
+            expect(newCustomer.statusCode).toBe(400)
+            expect(newCustomer.body).toStrictEqual({
+                "message": "email already exists"
+            })
+        })
+
+        test('create customer without customer_email field should return internal server request', async () => {
+
+            const newCustomer = await request(Base_url)
+                .post('/customer')
+                .set('Authorization', `Bearer ${authToken}`)
+                .send()
+
+
+            expect(newCustomer.statusCode).toBe(500)
+            expect(newCustomer.body).toStrictEqual({
+                "message": "WHERE parameter \"customer_email\" has invalid \"undefined\" value"
+            })
+        })
+
+        test('create customer without firstname,lastname, work_phone require field should return internal server request', async () => {
+
+            const newCustomer = await request(Base_url)
+                .post('/customer')
+                .set('Authorization', `Bearer ${authToken}`)
+                .send({
+                    customer_email: "ayush.kuar@hysus.com"
+                })
+
+
+            expect(newCustomer.statusCode).toBe(500)
+            expect(newCustomer.body).toStrictEqual({
+                "message": "notNull Violation: customer.firstname cannot be null,\nnotNull Violation: customer.lastname cannot be null,\nnotNull Violation: customer.work_phone cannot be null"
+            })
+        })
+
+    })
+
+    // describe('update customer details', () => {
+    //     test('updated customer successfully', async () => {
+    //         const updateCustomer = await 
+    //     })
+    // })
 })
