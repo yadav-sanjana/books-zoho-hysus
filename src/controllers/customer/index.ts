@@ -7,13 +7,13 @@ import { CompanyModel } from "../../models/user/companyDetailModel";
 export const CustomerController = {
     async getAllCustomer(req, res) {
         const customerList = await CustomerModel.findAll({
-            include: [
-                {
-                    model: CompanyModel,
-                    required: false,
-                    as: "as_company"
-                }
-            ]
+            // include: [
+            //     {
+            //         model: CompanyModel,
+            //         required: false,
+            //         as: "as_company"
+            //     }
+            // ]
         })
 
         res.send(customerList)
@@ -26,13 +26,13 @@ export const CustomerController = {
             where: {
                 id
             },
-            include: [
-                {
-                    model: CompanyModel,
-                    required: false,
-                    as: "as_company"
-                }
-            ]
+            // include: [
+            //     {
+            //         model: CompanyModel,
+            //         required: false,
+            //         as: "as_company"
+            //     }
+            // ]
         })
 
         if (!customer) {
