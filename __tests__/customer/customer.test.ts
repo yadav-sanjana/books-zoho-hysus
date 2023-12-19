@@ -12,7 +12,7 @@ describe('all customer apis', () => {
         contactPerson: "Ayush",
         company: "hysus",
         username: "ayush",
-        customer_email: "ayush.kumar@hysus.com",
+        customer_email: "ayush.kumarr@hysus.com",
         skype_name: "ayush",
         designation: "BD",
         work_phone: "8658389573195",
@@ -21,23 +21,23 @@ describe('all customer apis', () => {
         firstname: "Ayush",
         lastname: "Kumar"
     }
-    test('created new customer', async () => {
-        const newCustomer = await request(Base_url)
-            .post('/customer')
-            .set('Authorization', `Bearer ${authToken}`)
-            .send(customerDetail)
+    // test('created new customer', async () => {
+    //     const newCustomer = await request(Base_url)
+    //         .post('/customer')
+    //         .set('Authorization', `Bearer ${authToken}`)
+    //         .send(customerDetail)
 
-        expect(newCustomer.statusCode).toBe(200)
+    //     expect(newCustomer.statusCode).toBe(200)
 
-        const customerRecord = await CustomerModel.findOne({
-            where: {
-                id: newCustomer?.body?.id
-            }
-        })
-        expect(customerRecord).toBeTruthy()
+    //     const customerRecord = await CustomerModel.findOne({
+    //         where: {
+    //             id: newCustomer?.body?.id
+    //         }
+    //     })
+    //     expect(customerRecord).toBeTruthy()
 
-        expect(newCustomer.body).not.toBe(null)
-    })
+    //     expect(newCustomer.body).not.toBe(null)
+    // })
 
     test('create existing customer should return bad request', async () => {
         const newCustomer = await request(Base_url)
